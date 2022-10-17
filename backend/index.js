@@ -16,7 +16,7 @@ app.get("/", (req, res) => {
 sequelize
   .sync()
   .then(() => {
-    console.log("Conectado ao SQLite3!");
+    console.log("Connected to SQLite3!");
     app.listen(port, () => {
       console.log("🚀 App listening on port " + port);
     });
