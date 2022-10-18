@@ -68,12 +68,10 @@ const logout = (req, res) => {
   return res.json({ auth: false });
 };
 
-const getUserInfo = async (req, res) => {
-  const { id } = req.params;
+const getUserInfo = (req, res) => {
+  const { user } = req;
 
-  const user = await User.findOne({ where: { id }, raw: true });
-
-  return res.json({ name: user.name, email: user.email });
+  return res.json(user);
 };
 
 const userController = { login, register, logout, getUserInfo };

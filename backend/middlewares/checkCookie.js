@@ -13,7 +13,11 @@ const checkCookie = async (req, res, next) => {
 
   try {
     const { id } = jwt.verify(token, jwtSecret);
-    await User.findOne({ where: { id }});
+    req.user = await User.findOne({
+      where: { id },
+      attributes: { exclude: ["password"] },
+      raw: true,
+    });
     
     next();
   } catch (err) {
