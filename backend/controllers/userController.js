@@ -19,7 +19,7 @@ const login = async (req, res) => {
 
   const token = generateToken(user.id);
 
-  res.cookie("dosimagem", token, {
+  res.cookie("authCookie", token, {
     secure: false,
     httpOnly: true,
     expiresIn: new Date(Date.now() + 1000 * 60),
@@ -49,7 +49,7 @@ const register = async (req, res) => {
     .then((newUser) => {
       const token = generateToken(newUser.id);
 
-      res.cookie("dosimagem", token, {
+      res.cookie("authCookie", token, {
         secure: false,
         httpOnly: true,
         expiresIn: new Date(Date.now() + 1000 * 60),
@@ -63,6 +63,14 @@ const register = async (req, res) => {
     .catch((err) => console.log(err));
 };
 
-const userController = { login, register };
+const getUserInfo = async (req, res) => {
+  const { id } = req.params;
+
+  const user = await User.findOne({ where: { id }, raw: true });
+ 
+  return res.json({ name: user.name, email: user.email });
+};
+
+const userController = { login, register, getUserInfo };
 
 export default userController;

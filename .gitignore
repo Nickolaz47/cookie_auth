@@ -1,3 +1,4 @@
 *node_modules
 *db.sqlite3
 *package-lock.json
+*.env
