@@ -7,7 +7,7 @@ const validate = (req, res, next) => {
     return next();
   }
 
-  return res.sendStatus(422).json({ errors });
+  return res.status(422).json({ errors });
 };
 
 export default validate;
