@@ -17,9 +17,17 @@ const login = async (req, res) => {
     return res.status(401).json({ errors: ["Credenciais inválidas!"] });
   }
 
+  const token = generateToken(user.id);
+
+  res.cookie("dosimagem", token, {
+    secure: false,
+    httpOnly: true,
+    expiresIn: new Date(Date.now() + 1000 * 60),
+  });
+
   return res.json({
     id: user.id,
-    token: generateToken(user.id),
+    auth: true,
   });
 };
 
@@ -39,9 +47,17 @@ const register = async (req, res) => {
 
   User.create(user)
     .then((newUser) => {
+      const token = generateToken(newUser.id);
+
+      res.cookie("dosimagem", token, {
+        secure: false,
+        httpOnly: true,
+        expiresIn: new Date(Date.now() + 1000 * 60),
+      });
+
       return res.json({
         id: newUser.id,
-        token: generateToken(newUser.id),
+        auth: true,
       });
     })
     .catch((err) => console.log(err));
