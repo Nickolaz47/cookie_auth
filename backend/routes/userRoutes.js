@@ -18,6 +18,7 @@ userRoutes.post(
   validate,
   userController.register
 );
+userRoutes.get("/logout", userController.logout);
 userRoutes.get("/:id/info", checkCookie, userController.getUserInfo);
 
 export default userRoutes;

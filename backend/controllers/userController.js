@@ -63,6 +63,11 @@ const register = async (req, res) => {
     .catch((err) => console.log(err));
 };
 
+const logout = (req, res) => {
+  res.clearCookie("authCookie");
+  return res.json({ auth: false });
+};
+
 const getUserInfo = async (req, res) => {
   const { id } = req.params;
 
@@ -71,6 +76,6 @@ const getUserInfo = async (req, res) => {
   return res.json({ name: user.name, email: user.email });
 };
 
-const userController = { login, register, getUserInfo };
+const userController = { login, register, logout, getUserInfo };
 
 export default userController;
