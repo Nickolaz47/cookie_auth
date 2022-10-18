@@ -7,15 +7,13 @@ const login = async (req, res) => {
   const user = await User.findOne({ where: { email } });
 
   if (!user) {
-    res.status(401).json({ errors: ["Credenciais inválidas!"] });
-    return;
+    return res.status(401).json({ errors: ["Credenciais inválidas!"] });
   }
 
   const compairPasswords = bcrypt.compareSync(password, user.password);
 
   if (!compairPasswords) {
-    res.status(401).json({ errors: ["Credenciais inválidas!"] });
-    return;
+    return res.status(401).json({ errors: ["Credenciais inválidas!"] });
   }
 
   return res.json({ message: "Logado." });
@@ -27,8 +25,7 @@ const register = async (req, res) => {
   const checkIfUserExists = await User.findOne({ where: { email } });
 
   if (checkIfUserExists) {
-    res.status(409).json({ errors: ["O e-mail já está em uso."] });
-    return;
+    return res.status(409).json({ errors: ["O e-mail já está em uso."] });
   }
 
   const salt = bcrypt.genSaltSync(10);
