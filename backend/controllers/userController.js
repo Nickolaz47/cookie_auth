@@ -22,7 +22,7 @@ const login = async (req, res) => {
   res.cookie("authCookie", token, {
     secure: false,
     httpOnly: true,
-    expiresIn: new Date(Date.now() + 1000 * 60),
+    maxAge: new Date(Date.now() + 1000 * 60),
   });
 
   return res.json({
@@ -52,7 +52,7 @@ const register = async (req, res) => {
       res.cookie("authCookie", token, {
         secure: false,
         httpOnly: true,
-        expiresIn: new Date(Date.now() + 1000 * 60),
+        maxAge: new Date(Date.now() + 1000 * 60),
       });
 
       return res.json({
@@ -67,7 +67,7 @@ const getUserInfo = async (req, res) => {
   const { id } = req.params;
 
   const user = await User.findOne({ where: { id }, raw: true });
- 
+
   return res.json({ name: user.name, email: user.email });
 };
 
