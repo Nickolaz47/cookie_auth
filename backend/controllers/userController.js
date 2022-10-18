@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
+import { generateToken } from "../auth/token.js";
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -16,7 +17,10 @@ const login = async (req, res) => {
     return res.status(401).json({ errors: ["Credenciais inválidas!"] });
   }
 
-  return res.json({ message: "Logado." });
+  return res.json({
+    id: user.id,
+    token: generateToken(user.id),
+  });
 };
 
 const register = async (req, res) => {
@@ -35,7 +39,10 @@ const register = async (req, res) => {
 
   User.create(user)
     .then((newUser) => {
-      return res.json({ message: "Cadastro realizado com sucesso." });
+      return res.json({
+        id: newUser.id,
+        token: generateToken(newUser.id),
+      });
     })
     .catch((err) => console.log(err));
 };
