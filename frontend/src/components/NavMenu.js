@@ -2,6 +2,9 @@
 import { NavLink } from "react-router-dom";
 // Hooks
 import { useAuth } from "../hooks/useAuth";
+import { useDispatch } from "react-redux";
+// Redux
+import { logout } from "../redux/slices/userSlice";
 
 const NavMenu = () => {
   const navLinksNoAuth = [
@@ -12,6 +15,7 @@ const NavMenu = () => {
   const navLinksAuth = [{ name: "Dashboard", url: "/dashboard" }];
 
   const { auth } = useAuth();
+  const dispatch = useDispatch();
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
@@ -50,6 +54,18 @@ const NavMenu = () => {
                 )
             )}
           </ul>
+        </div>
+        <div className="d-flex align-items-center">
+          {auth && (
+            <button
+              className="btn btn-outline-danger btn-sm mx-1"
+              onClick={() => dispatch(logout())}
+            >
+              <span className="d-flex justify-content-center align-items-center">
+                Logout
+              </span>
+            </button>
+          )}
         </div>
       </div>
     </nav>

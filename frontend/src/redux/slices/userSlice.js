@@ -32,6 +32,20 @@ export const login = createAsyncThunk("user/login", async (user, thunkAPI) => {
   return data;
 });
 
+export const logout = createAsyncThunk(
+  "user/logout",
+  async (none, thunkAPI) => {
+    const data = await userService.logout();
+
+    if (data.errors) {
+      return thunkAPI.rejectWithValue(data.errors[0]);
+    }
+
+    Cookies.remove("frontAuthCookie");
+    return data;
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -68,12 +82,28 @@ const userSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         state.success = false;
+        state.user = null;
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
         state.success = true;
         state.user = action.payload;
+      })
+      .addCase(logout.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(logout.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.success = false;
+      })
+      .addCase(logout.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.success = true;
+        state.user = null;
       });
   },
 });
