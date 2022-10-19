@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import userService from "../services/userService";
+import Cookies from "js-cookie";
 
 const initialState = {
-  user: null,
+  user: Cookies.get("frontAuthCookie") || null,
   error: null,
   loading: false,
   success: false,
@@ -16,6 +17,7 @@ export const register = createAsyncThunk(
       return thunkAPI.rejectWithValue(data.errors[0]);
     }
 
+    Cookies.set("frontAuthCookie", data.id, { expires: 0.01 });
     return data;
   }
 );
@@ -26,6 +28,7 @@ export const login = createAsyncThunk("user/login", async (user, thunkAPI) => {
     return thunkAPI.rejectWithValue(data.errors[0]);
   }
 
+  Cookies.set("frontAuthCookie", data.id, { expires: 0.01 });
   return data;
 });
 
