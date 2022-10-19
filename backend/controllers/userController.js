@@ -22,7 +22,8 @@ const login = async (req, res) => {
   res.cookie("authCookie", token, {
     secure: false,
     httpOnly: true,
-    maxAge: new Date(Date.now() + 1000 * 60),
+    // Almost 1 minute
+    maxAge: 1 * 60 * 60 * 16.6,
   });
 
   return res.json({
@@ -51,7 +52,8 @@ const register = async (req, res) => {
       res.cookie("authCookie", token, {
         secure: false,
         httpOnly: true,
-        maxAge: new Date(Date.now() + 1000 * 60),
+        // Almost 1 minute
+        maxAge: 1 * 60 * 60 * 16.6,
       });
 
       return res.json({
