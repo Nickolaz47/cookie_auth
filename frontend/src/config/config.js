@@ -1,6 +1,6 @@
 export const baseUrl = "http://localhost:3000";
 
-export const requestConfig = (baseURL, method, data, credentials = false) => {
+export const requestConfig = (baseURL, method, data, credentials = true) => {
   if (method === "delete" || data === null) {
     const config = {
       baseURL,
