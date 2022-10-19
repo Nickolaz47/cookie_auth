@@ -1,4 +1,4 @@
-export const baseUrl = "http://localhost:3000";
+export const baseUrl = process.env.REACT_APP_API_URL;
 
 export const requestConfig = (baseURL, method, data, credentials = true) => {
   if (method === "delete" || data === null) {
