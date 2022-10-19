@@ -1,7 +1,7 @@
 // React Router
 import { NavLink } from "react-router-dom";
-// React Redux
-import { useSelector } from "react-redux";
+// Hooks
+import { useAuth } from "../hooks/useAuth";
 
 const NavMenu = () => {
   const navLinksNoAuth = [
@@ -11,7 +11,7 @@ const NavMenu = () => {
 
   const navLinksAuth = [{ name: "Dashboard", url: "/dashboard" }];
 
-  const { user } = useSelector((state) => state.user);
+  const { auth } = useAuth();
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
@@ -31,7 +31,7 @@ const NavMenu = () => {
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             {navLinksNoAuth.map(
               ({ name, url }, idx) =>
-                !user && (
+                !auth && (
                   <li className="nav-item" key={idx}>
                     <NavLink className="nav-link" to={url} end>
                       {name}
@@ -41,7 +41,7 @@ const NavMenu = () => {
             )}
             {navLinksAuth.map(
               ({ name, url }, idx) =>
-                user && (
+                auth && (
                   <li className="nav-item" key={idx}>
                     <NavLink className="nav-link" to={url} end>
                       {name}
