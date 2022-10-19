@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import userService from "../services/userService";
 
 const initialState = {
-  user: {},
+  user: null,
   error: null,
   loading: false,
   success: false,
@@ -12,7 +12,6 @@ export const register = createAsyncThunk(
   "user/register",
   async (newUser, thunkAPI) => {
     const data = await userService.register(newUser);
-
     if (data.errors) {
       return thunkAPI.rejectWithValue(data.errors[0]);
     }

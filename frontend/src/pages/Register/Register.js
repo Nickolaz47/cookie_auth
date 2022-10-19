@@ -1,5 +1,5 @@
 // Hooks
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 // Components
 import { Link } from "react-router-dom";
@@ -12,8 +12,15 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const loading = false;
-  const error = false;
+  const { loading, error } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const newUser = { name, email, password, confirmPassword };
+    dispatch(register(newUser));
+  };
 
   return (
     <div className="container py-3 h-100">
@@ -25,10 +32,11 @@ const Register = () => {
           >
             <div className="card-body pb-5 px-5 text-center dosiform">
               <div className="mb-md-3 mt-md-2 pb-4">
+                <h2>Cadastro</h2>
                 <div className="text-black-75 mb-5">
                   Por favor insira seus dados para fazer o cadastro!
                 </div>
-                <form onSubmit={""}>
+                <form onSubmit={handleSubmit}>
                   <div className="row">
                     <div className="col-md-6 mb-4">
                       <div className="form-floating text-start">
@@ -87,7 +95,7 @@ const Register = () => {
                       <div className="form-floating text-start">
                         <input
                           className="form-control"
-                          type="text"
+                          type="password"
                           placeholder="Confirme a senha"
                           value={confirmPassword || ""}
                           onChange={(e) => setConfirmPassword(e.target.value)}
@@ -106,7 +114,6 @@ const Register = () => {
                   {!loading && (
                     <button
                       className="btn btn-primary btn-lg px-5"
-                      name="button"
                       type="submit"
                     >
                       Cadastrar
@@ -115,7 +122,7 @@ const Register = () => {
                   {loading && <p>Carregando...</p>}
                 </form>
               </div>
-              {error && <p className="text-bg-success p-3">{error}</p>}
+              {error && <p className="text-bg-danger p-3">{error}</p>}
               <div>
                 <p className="mb-0">
                   Já possui conta? <Link to="/login">Faça login</Link>.

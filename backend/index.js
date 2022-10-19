@@ -2,6 +2,7 @@ import express from "express";
 import sequelize from "./db/conn.js";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
+import cors from "cors";
 // Models
 import User from "./models/User.js";
 // Routes
@@ -15,6 +16,7 @@ const port = process.env.PORT;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.json({ message: "Hello API!" });

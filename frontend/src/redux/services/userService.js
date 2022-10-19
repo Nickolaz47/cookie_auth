@@ -1,19 +1,11 @@
 // Config
 import { baseUrl, requestConfig } from "../../config/config";
-// Requests
 import axios from "axios";
 
-const instance = axios.create({
-  baseURL: baseUrl,
-  withCredentials: true,
-  timeout: 5000,
-});
-
 const register = async (data) => {
-  const config = requestConfig("post", data);
-
+  const config = requestConfig(`${baseUrl}/register`, "POST", data);
   try {
-    const res = await instance({ url: "/register", data }, config);
+    const res = await axios(config);
     return res.data;
   } catch (error) {
     return error.response.data;
