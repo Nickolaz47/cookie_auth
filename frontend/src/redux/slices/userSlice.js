@@ -46,6 +46,20 @@ export const logout = createAsyncThunk(
   }
 );
 
+export const getUserData = createAsyncThunk(
+  "user/info",
+  async (none, thunkAPI) => {
+    const userId = thunkAPI.getState().user.user.id;
+    const data = await userService.getUserData(userId);
+
+    if (data.errors) {
+      return thunkAPI.rejectWithValue(data.errors[0]);
+    }
+
+    return data;
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -104,6 +118,22 @@ const userSlice = createSlice({
         state.error = null;
         state.success = true;
         state.user = null;
+      })
+      .addCase(getUserData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getUserData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.success = false;
+        state.user = null;
+      })
+      .addCase(getUserData.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.success = true;
+        state.user = action.payload;
       });
   },
 });

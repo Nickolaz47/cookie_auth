@@ -33,7 +33,15 @@ const logout = async () => {
   }
 };
 
-const getUserData = async () => {};
+const getUserData = async (userId) => {
+  const config = requestConfig(`${baseUrl}/${userId}/info`, "GET", null);
+  try {
+    const res = await axios(config);
+    return res.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
 
 const userService = { register, login, logout, getUserData };
 
