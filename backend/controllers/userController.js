@@ -27,7 +27,6 @@ const login = async (req, res) => {
 
   return res.json({
     id: user.id,
-    auth: true,
   });
 };
 
@@ -57,7 +56,6 @@ const register = async (req, res) => {
 
       return res.json({
         id: newUser.id,
-        auth: true,
       });
     })
     .catch((err) => console.log(err));
