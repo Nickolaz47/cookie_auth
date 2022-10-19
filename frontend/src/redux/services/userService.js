@@ -1,5 +1,5 @@
 // Config
-import { baseUrl, requestConfig } from "../../utils/config";
+import { baseUrl, requestConfig } from "../../config/config";
 // Requests
 import axios from "axios";
 
