@@ -1,5 +1,6 @@
 // Pages
 import Register from "./pages/Register/Register";
+import Login from "./pages/Login/Login";
 // Components
 import NavMenu from "./components/NavMenu";
 // React Router
@@ -11,9 +12,10 @@ function App() {
   return (
     <div>
       <BrowserRouter>
-      <NavMenu/>
+        <NavMenu />
         <div className="set_page_size">
           <Routes>
+            <Route path="/login" element={<Login />}></Route>
             <Route path="/register" element={<Register />}></Route>
           </Routes>
         </div>

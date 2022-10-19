@@ -30,7 +30,7 @@ const Register = () => {
             className="card bg-white text-black"
             style={{ borderRadius: "1rem" }}
           >
-            <div className="card-body pb-5 px-5 text-center dosiform">
+            <div className="card-body pb-5 px-5 text-center">
               <div className="mb-md-3 mt-md-2 pb-4">
                 <h2>Cadastro</h2>
                 <div className="text-black-75 mb-5">
