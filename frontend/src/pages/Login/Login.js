@@ -17,7 +17,7 @@ const Login = () => {
     e.preventDefault();
 
     const user = { email, password };
-    dispatch();
+    dispatch(login(user));
   };
 
   return (

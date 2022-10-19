@@ -12,11 +12,19 @@ const register = async (data) => {
   }
 };
 
-const login = async (req, res) => {};
+const login = async (data) => {
+  const config = requestConfig(`${baseUrl}/login`, "POST", data);
+  try {
+    const res = await axios(config);
+    return res.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
 
-const logout = async (req, res) => {};
+const logout = async () => {};
 
-const getUserData = async (req, res) => {};
+const getUserData = async () => {};
 
 const userService = { register, login, logout, getUserData };
 

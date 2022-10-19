@@ -20,6 +20,15 @@ export const register = createAsyncThunk(
   }
 );
 
+export const login = createAsyncThunk("user/login", async (user, thunkAPI) => {
+  const data = await userService.login(user);
+  if (data.errors) {
+    return thunkAPI.rejectWithValue(data.errors[0]);
+  }
+
+  return data;
+});
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -43,6 +52,21 @@ const userSlice = createSlice({
         state.user = null;
       })
       .addCase(register.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.success = true;
+        state.user = action.payload;
+      })
+      .addCase(login.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.success = false;
+      })
+      .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
         state.success = true;
