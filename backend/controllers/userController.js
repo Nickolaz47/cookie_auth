@@ -17,7 +17,8 @@ const login = async (req, res) => {
     return res.status(401).json({ errors: ["Credenciais inválidas!"] });
   }
 
-  const token = generateToken(user.id);
+  const jwtSecret = process.env.JWT_SECRET;
+  const token = generateToken({ id: user.id }, jwtSecret);
 
   res.cookie("authCookie", token, {
     secure: false,
@@ -47,7 +48,8 @@ const register = async (req, res) => {
 
   User.create(user)
     .then((newUser) => {
-      const token = generateToken(newUser.id);
+      const jwtSecret = process.env.JWT_SECRET;
+      const token = generateToken({ id: newUser.id }, jwtSecret);
 
       res.cookie("authCookie", token, {
         secure: false,
