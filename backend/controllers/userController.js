@@ -58,7 +58,7 @@ const register = async (req, res) => {
         maxAge: 1 * 60 * 60 * 16.6,
       });
 
-      return res.json({
+      return res.status(201).json({
         id: newUser.id,
       });
     })
