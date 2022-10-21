@@ -46,6 +46,8 @@ describe(`POST ${baseUrl}/register`, () => {
   });
 
   it("Creating a user and getting the cookie", async () => {
+    await User.destroy({ where: { name: "User" } });
+
     const data = {
       name: "User",
       email: "user@email.com",
