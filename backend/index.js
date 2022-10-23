@@ -1,4 +1,4 @@
-import express from "express";
+import express, { application } from "express";
 import sequelize from "./db/conn.js";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
@@ -6,6 +6,7 @@ import cors from "cors";
 // Models
 import User from "./models/User.js";
 // Routes
+import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
@@ -22,7 +23,8 @@ app.get("/", (req, res) => {
   res.json({ message: "Hello API!" });
 });
 
-app.use("/", userRoutes);
+app.use("/users", userRoutes);
+app.use("/", authRoutes);
 
 sequelize
   .sync()

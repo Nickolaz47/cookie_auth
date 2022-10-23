@@ -3,7 +3,7 @@ import User from "../../models/User.js";
 
 const baseUrl = "http://localhost:3000";
 
-describe(`GET ${baseUrl}/:id/info`, () => {
+describe(`GET ${baseUrl}/users/:id`, () => {
   const registerData = {
     name: "User",
     email: "user@email.com",
@@ -40,7 +40,7 @@ describe(`GET ${baseUrl}/:id/info`, () => {
       .send(loginData);
 
     const status = 401;
-    const res = await request(baseUrl).get(`/${user.id}/info`).send();
+    const res = await request(baseUrl).get(`/users/${user.id}`).send();
 
     const resStatus = res.status;
     const userData = res._body;
@@ -61,7 +61,7 @@ describe(`GET ${baseUrl}/:id/info`, () => {
 
     const status = 400;
     const res = await request(baseUrl)
-      .get(`/${user.id}/info`)
+      .get(`/users/${user.id}`)
       .set("Cookie", [...mockCookie])
       .send();
 
@@ -79,7 +79,7 @@ describe(`GET ${baseUrl}/:id/info`, () => {
 
     const status = 200;
     const res = await request(baseUrl)
-      .get(`/${user.id}/info`)
+      .get(`/users/${user.id}`)
       .set("Cookie", [...header["set-cookie"]])
       .send();
 

@@ -1,6 +1,6 @@
 import { body } from "express-validator";
 
-const userCreationValidation = () => {
+const authCreationValidation = () => {
   return [
     body("name")
       .isString()
@@ -29,13 +29,13 @@ const userCreationValidation = () => {
   ];
 };
 
-const userLoginValidation = () => {
+const authLoginValidation = () => {
   return [
     body("email").isEmail().withMessage("Insira um e-mail válido."),
     body("password").isString().withMessage("Insira a senha."),
   ];
 };
 
-const userValidations = { userCreationValidation, userLoginValidation };
+const authValidations = { authCreationValidation, authLoginValidation };
 
-export default userValidations;
+export default authValidations;
