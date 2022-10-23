@@ -4,7 +4,7 @@ import User from "../../models/User.js";
 const baseUrl = "http://localhost:3000";
 
 describe(`POST ${baseUrl}/login`, () => {
-  beforeEach(async () => {
+  beforeAll(async () => {
     const data = {
       name: "User",
       email: "user@email.com",
@@ -15,7 +15,7 @@ describe(`POST ${baseUrl}/login`, () => {
     await request(baseUrl).post("/register").send(data);
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     const user = await User.findOne({ where: { name: "User" } });
 
     if (user) {
