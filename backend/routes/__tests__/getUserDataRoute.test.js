@@ -16,22 +16,22 @@ describe(`GET ${baseUrl}/:id/info`, () => {
     password: registerData.password,
   };
 
-  beforeAll(async () => {
+  const deleteUser = async () => {
     const user = await User.findOne({ where: { email: registerData.email } });
 
     if (user) {
       await User.destroy({ where: { email: user.email } });
     }
+  };
+
+  beforeAll(async () => {
+    await deleteUser();
 
     await request(baseUrl).post("/register").send(registerData);
   });
 
   afterAll(async () => {
-    const user = await User.findOne({ where: { email: registerData.email } });
-
-    if (user) {
-      await User.destroy({ where: { email: user.email } });
-    }
+    await deleteUser();
   });
 
   it("Trying get data without cookie", async () => {
