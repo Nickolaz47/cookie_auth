@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 export const useAuth = () => {
   const [auth, setAuth] = useState(false);
 
-  const { user } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (user) {

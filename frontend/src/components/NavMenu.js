@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { useDispatch } from "react-redux";
 // Redux
-import { logout } from "../redux/slices/userSlice";
+import { logout } from "../redux/slices/authSlice";
 
 const NavMenu = () => {
   const navLinksNoAuth = [

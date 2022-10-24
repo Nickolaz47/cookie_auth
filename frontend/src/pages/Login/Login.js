@@ -1,16 +1,16 @@
 // Hooks
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 // Components
 import { Link } from "react-router-dom";
 // Redux
-import { login } from "../../redux/slices/userSlice";
+import { login, reset } from "../../redux/slices/authSlice";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { loading, error } = useSelector((state) => state.user);
+  const { loading, error } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
@@ -19,6 +19,10 @@ const Login = () => {
     const user = { email, password };
     dispatch(login(user));
   };
+
+  useEffect(() => {
+    dispatch(reset());
+  }, [dispatch]);
 
   return (
     <div className="container py-5 h-100">

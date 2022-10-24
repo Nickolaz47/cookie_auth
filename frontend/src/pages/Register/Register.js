@@ -1,10 +1,10 @@
 // Hooks
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 // Components
 import { Link } from "react-router-dom";
 // Redux
-import { register } from "../../redux/slices/userSlice";
+import { register, reset } from "../../redux/slices/authSlice";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -12,7 +12,7 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const { loading, error } = useSelector((state) => state.user);
+  const { loading, error } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
@@ -21,6 +21,10 @@ const Register = () => {
     const newUser = { name, email, password, confirmPassword };
     dispatch(register(newUser));
   };
+
+  useEffect(() => {
+    dispatch(reset());
+  }, [dispatch]);
 
   return (
     <div className="container py-3 h-100">
