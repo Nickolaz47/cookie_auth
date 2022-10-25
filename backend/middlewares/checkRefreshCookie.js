@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import Token from "../models/Token.js";
 import jwt from "jsonwebtoken";
 import { generateAccessToken } from "../auth/token.js";
 
@@ -10,6 +11,12 @@ const checkRefreshCookie = async (req, res, next) => {
 
   if (!refreshToken) {
     return res.status(401).json({ errors: ["Acesso negado!"] });
+  }
+
+  const tokenInDb = await Token.findOne({ where: { value: refreshToken } });
+
+  if (!tokenInDb) {
+    return res.status(403).json({ errors: ["Token inválido!"] });
   }
 
   if (user) {
