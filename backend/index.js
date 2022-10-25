@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 // Models
 import User from "./models/User.js";
+import Token from "./models/Token.js";
 // Routes
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";

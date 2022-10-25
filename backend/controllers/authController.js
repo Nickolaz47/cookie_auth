@@ -1,6 +1,7 @@
 import User from "../models/User.js";
+import Token from "../models/Token.js";
 import bcrypt from "bcryptjs";
-import { generateToken } from "../auth/token.js";
+import { generateAccessToken, generateRefreshToken } from "../auth/token.js";
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -17,15 +18,20 @@ const login = async (req, res) => {
     return res.status(401).json({ errors: ["Credenciais inválidas!"] });
   }
 
-  const jwtSecret = process.env.JWT_SECRET;
-  const token = generateToken({ id: user.id }, jwtSecret);
+  const accessToken = generateAccessToken({ id: user.id });
+  const refreshToken = generateRefreshToken({ id: user.id });
 
-  res.cookie("authCookie", token, {
-    secure: false,
-    httpOnly: true,
-    // Almost 1 minute
-    maxAge: 1 * 60 * 60 * 16.6,
-  });
+  await Token.create({ value: refreshToken, UserId: user.id });
+
+  res
+    .cookie("authAccessCookie", accessToken, {
+      secure: false,
+      httpOnly: true,
+    })
+    .cookie("authRefreshCookie", refreshToken, {
+      secure: false,
+      httpOnly: true,
+    });
 
   return res.json({
     id: user.id,
@@ -48,15 +54,20 @@ const register = async (req, res) => {
 
   User.create(user)
     .then((newUser) => {
-      const jwtSecret = process.env.JWT_SECRET;
-      const token = generateToken({ id: newUser.id }, jwtSecret);
+      const accessToken = generateAccessToken({ id: newUser.id });
+      const refreshToken = generateRefreshToken({ id: newUser.id });
 
-      res.cookie("authCookie", token, {
-        secure: false,
-        httpOnly: true,
-        // Almost 1 minute
-        maxAge: 1 * 60 * 60 * 16.6,
-      });
+      Token.create({ value: refreshToken, UserId: newUser.id });
+
+      res
+        .cookie("authAccessCookie", accessToken, {
+          secure: false,
+          httpOnly: true,
+        })
+        .cookie("authRefreshCookie", refreshToken, {
+          secure: false,
+          httpOnly: true,
+        });
 
       return res.status(201).json({
         id: newUser.id,
@@ -65,8 +76,14 @@ const register = async (req, res) => {
     .catch((err) => console.log(err));
 };
 
-const logout = (req, res) => {
-  res.clearCookie("authCookie");
+const logout = async (req, res) => {
+  const { authRefreshCookie } = req.cookies;
+
+  res.clearCookie("authAccessCookie");
+  res.clearCookie("authRefreshCookie");
+
+  await Token.destroy({ where: { value: authRefreshCookie } });
+
   return res.json({ auth: false });
 };
 

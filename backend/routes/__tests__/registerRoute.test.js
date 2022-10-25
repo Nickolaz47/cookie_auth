@@ -1,5 +1,6 @@
 import request from "supertest";
 import User from "../../models/User.js";
+import Token from "../../models/Token.js";
 
 const baseUrl = "http://localhost:3000";
 
@@ -11,6 +12,17 @@ describe(`POST ${baseUrl}/register`, () => {
     confirmPassword: "12345678",
   };
 
+  const deleteTokens = async () => {
+    const user = await User.findOne({ where: { email: registerData.email } });
+
+    if (user) {
+      const tokens = await Token.findAll({ where: { UserId: user.id } });
+      tokens.forEach(async (token) => {
+        await token.destroy();
+      });
+    }
+  };
+
   const deleteUser = async () => {
     const user = await User.findOne({ where: { email: registerData.email } });
 
@@ -20,6 +32,7 @@ describe(`POST ${baseUrl}/register`, () => {
   };
 
   afterAll(async () => {
+    await deleteTokens();
     await deleteUser();
   });
 
@@ -62,11 +75,15 @@ describe(`POST ${baseUrl}/register`, () => {
 
     const resStatus = res.status;
     const resData = res._body;
-    const cookies = res.header["set-cookie"][0].includes("authCookie");
+    const accessCookie =
+      res.header["set-cookie"][0].includes("authAccessCookie");
+    const refreshCookie =
+      res.header["set-cookie"][1].includes("authRefreshCookie");
 
     expect(resStatus).toBe(status);
     expect(resData.id.length).toBe(36);
-    expect(cookies).toBeTruthy();
+    expect(accessCookie).toBeTruthy();
+    expect(refreshCookie).toBeTruthy();
   });
 
   it("Checking if email exists in db before creating a new user", async () => {
