@@ -9,6 +9,6 @@ urlpatterns = [
     path('login', MyLoginView.as_view(), name='login'),
     path('logout', LogoutView.as_view(), name='logout'),
     path('token/refresh', MyRefreshViewWithCookieSupport.as_view(), name='token_refresh'),
-    path('<uuid:user_id>/info', get_user_info, name='get_user_info'),
+    path('users/<uuid:user_id>', get_user_info, name='get_user_info'),
     path('register', register, name='register'),
 ]

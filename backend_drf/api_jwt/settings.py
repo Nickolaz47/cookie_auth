@@ -147,8 +147,8 @@ SIMPLE_JWT = {
 
   'SIGNING_KEY': SECRET_KEY,
 
-  'USER_ID_FIELD': 'id',
-  'USER_ID_CLAIM': 'user_id',
+  'USER_ID_FIELD': 'uuid',
+  'USER_ID_CLAIM': 'id',
 
 }
 
@@ -157,8 +157,8 @@ SIMPLE_JWT = {
 JWT_AUTH_COOKIE_USE_CSRF = False
 REST_SESSION_LOGIN = False
 REST_USE_JWT = True
-JWT_AUTH_COOKIE = 'jwt-access-token'           # you can set these
-JWT_AUTH_REFRESH_COOKIE = 'jwt-refresh-token'  # to anything
+JWT_AUTH_COOKIE = 'jwt-access-token'
+JWT_AUTH_REFRESH_COOKIE = 'jwt-refresh-token'
 JWT_AUTH_SECURE = False
 JWT_AUTH_HTTPONLY = True
 JWT_AUTH_SAMESITE = 'Strict'
