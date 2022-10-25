@@ -1,5 +1,7 @@
 import request from "supertest";
 import User from "../../models/User.js";
+import Token from "../../models/Token.js";
+import { generateRefreshToken } from "../../auth/token.js";
 
 const baseUrl = "http://localhost:3000";
 
@@ -16,6 +18,17 @@ describe(`GET ${baseUrl}/users/:id`, () => {
     password: registerData.password,
   };
 
+  const deleteTokens = async () => {
+    const user = await User.findOne({ where: { email: registerData.email } });
+
+    if (user) {
+      const tokens = await Token.findAll({ where: { UserId: user.id } });
+      tokens.forEach(async (token) => {
+        await token.destroy();
+      });
+    }
+  };
+
   const deleteUser = async () => {
     const user = await User.findOne({ where: { email: registerData.email } });
 
@@ -25,12 +38,11 @@ describe(`GET ${baseUrl}/users/:id`, () => {
   };
 
   beforeAll(async () => {
-    await deleteUser();
-
     await request(baseUrl).post("/register").send(registerData);
   });
 
   afterAll(async () => {
+    await deleteTokens();
     await deleteUser();
   });
 
@@ -140,6 +152,41 @@ describe(`GET ${baseUrl}/users/:id`, () => {
       "createdAt",
       "updatedAt"
     );
+  });
+
+  it("Trying get data with invalid access cookie and valid refresh cookie that are not in Db", async () => {
+    const mockAccessToken =
+      "authAccessCookie=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiaWQiOiIxMjM0NTY3ODkifQ.bosHfiVNC1O13aHnZOvqp-LCuRw2_4G5DNd61Ixh_Tc";
+
+    const { header, _body: user } = await request(baseUrl)
+      .post("/login")
+      .send(loginData);
+
+    const accessCookieParameters = header["set-cookie"][0].split(";").slice(1);
+    const refreshCookieParameters = header["set-cookie"][1].split(";").slice(1);
+
+    const mockAccessCookie = [
+      [mockAccessToken, ...accessCookieParameters].join(";"),
+    ];
+
+    const refreshTokenOutDb = `authRefreshCookie=${generateRefreshToken({
+      id: "1110987654321",
+    })}`;
+    const refreshCookieOutDb = [
+      [refreshTokenOutDb, ...refreshCookieParameters].join(";"),
+    ];
+
+    const status = 403;
+    const res = await request(baseUrl)
+      .get(`/users/${user.id}`)
+      .set("Cookie", [...mockAccessCookie, ...refreshCookieOutDb])
+      .send();
+
+    const resStatus = res.status;
+    const userData = res._body;
+
+    expect(resStatus).toBe(status);
+    expect(userData.errors[0]).toBe("Token inválido!");
   });
 
   it("Getting data from user", async () => {

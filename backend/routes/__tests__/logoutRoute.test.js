@@ -1,5 +1,6 @@
 import request from "supertest";
 import User from "../../models/User.js";
+import Token from "../../models/Token.js";
 
 const baseUrl = "http://localhost:3000";
 
@@ -11,6 +12,17 @@ describe(`GET ${baseUrl}/logout`, () => {
     confirmPassword: "12345678",
   };
 
+  const deleteTokens = async () => {
+    const user = await User.findOne({ where: { email: registerData.email } });
+
+    if (user) {
+      const tokens = await Token.findAll({ where: { UserId: user.id } });
+      tokens.forEach(async (token) => {
+        await token.destroy();
+      });
+    }
+  };
+
   const deleteUser = async () => {
     const user = await User.findOne({ where: { email: registerData.email } });
 
@@ -19,19 +31,22 @@ describe(`GET ${baseUrl}/logout`, () => {
     }
   };
 
-  beforeAll(async () => {
-    await deleteUser();
-
-    await request(baseUrl).post("/register").send(registerData);
-  });
-
   afterAll(async () => {
+    await deleteTokens();
     await deleteUser();
   });
 
   it("Logging out and remove the cookie", async () => {
+    const { header } = await request(baseUrl)
+      .post("/register")
+      .send(registerData);
+    const cookies = header["set-cookie"];
+
     const status = 200;
-    const res = await request(baseUrl).get("/logout");
+    const res = await request(baseUrl)
+      .get("/logout")
+      .set("Cookie", [...cookies])
+      .send();
 
     const resStatus = res.status;
     const resData = res._body;
