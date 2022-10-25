@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import Token from "../models/Token.js";
 import bcrypt from "bcryptjs";
 import { generateAccessToken, generateRefreshToken } from "../auth/token.js";
 
@@ -19,6 +20,8 @@ const login = async (req, res) => {
 
   const accessToken = generateAccessToken({ id: user.id });
   const refreshToken = generateRefreshToken({ id: user.id });
+
+  await Token.create({ value: refreshToken, UserId: user.id });
 
   res
     .cookie("authAccessCookie", accessToken, {
@@ -54,6 +57,8 @@ const register = async (req, res) => {
       const accessToken = generateAccessToken({ id: newUser.id });
       const refreshToken = generateRefreshToken({ id: newUser.id });
 
+      Token.create({ value: refreshToken, UserId: newUser.id });
+
       res
         .cookie("authAccessCookie", accessToken, {
           secure: false,
@@ -71,9 +76,14 @@ const register = async (req, res) => {
     .catch((err) => console.log(err));
 };
 
-const logout = (req, res) => {
+const logout = async (req, res) => {
+  const { authRefreshCookie } = req.cookies;
+
   res.clearCookie("authAccessCookie");
-  res.clearCookie("authRefreshCookie")
+  res.clearCookie("authRefreshCookie");
+
+  await Token.destroy({ where: { value: authRefreshCookie } });
+
   return res.json({ auth: false });
 };
 
