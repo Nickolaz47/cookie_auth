@@ -13,13 +13,12 @@ const checkRefreshCookie = async (req, res, next) => {
   }
 
   if (user) {
-    // Ensure that the logic stops here if user exists
     return next();
   }
 
   jwt.verify(refreshToken, refreshSecret, async (err, user) => {
     if (err) {
-      return res.send(403).json({ errors: ["Token inválido!"] });
+      return res.status(403).json({ errors: ["Token inválido!"] });
     }
     try {
       req.user = await User.findOne({
@@ -35,7 +34,7 @@ const checkRefreshCookie = async (req, res, next) => {
         httpOnly: true,
       });
 
-      next();
+      return next();
     } catch (error) {
       return res.status(403).json({ errors: ["Token inválido!"] });
     }

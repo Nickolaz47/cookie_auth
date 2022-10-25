@@ -13,7 +13,6 @@ const checkCookie = async (req, res, next) => {
 
   jwt.verify(accessToken, accessSecret, async (err, user) => {
     if (err) {
-      // Ensure that the logic stops here if exists an error
       return next();
     }
     try {
@@ -23,7 +22,7 @@ const checkCookie = async (req, res, next) => {
         raw: true,
       });
 
-      next();
+      return next();
     } catch (error) {
       return res.status(403).json({ errors: ["Token inválido!"] });
     }

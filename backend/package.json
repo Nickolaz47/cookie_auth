@@ -5,7 +5,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --detectOpenHandles --forceExit --watchAll",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --watchAll",
     "start": "nodemon ./index.js"
   },
   "keywords": [],
