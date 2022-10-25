@@ -82,10 +82,14 @@ describe(`POST ${baseUrl}/login`, () => {
 
     const resStatus = res.status;
     const resData = res._body;
-    const cookies = res.header["set-cookie"][0].includes("authCookie");
+    const accessCookie =
+      res.header["set-cookie"][0].includes("authAccessCookie");
+    const refreshCookie =
+      res.header["set-cookie"][1].includes("authRefreshCookie");
 
     expect(resStatus).toBe(status);
     expect(resData.id.length).toBe(36);
-    expect(cookies).toBeTruthy();
+    expect(accessCookie).toBeTruthy();
+    expect(refreshCookie).toBeTruthy();
   });
 });
