@@ -59,7 +59,7 @@ const register = async (req, res) => {
           secure: false,
           httpOnly: true,
         })
-        .cookie("authRefreshToken", refreshToken, {
+        .cookie("authRefreshCookie", refreshToken, {
           secure: false,
           httpOnly: true,
         });
