@@ -16,7 +16,7 @@ Both cookies are http-only and cannot be access through JavaScript. To ensure th
 
 The cookies are removed from the web browser through the logout route. Besides that, the refresh token is deleted from database.
 
-## Rotas
+## Routes
 
 ### 1) POST login
 
