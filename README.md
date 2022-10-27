@@ -72,6 +72,8 @@ http://localhost:3000/register
 
 ### 3) GET get user info
 
+- URL
+
 ```curl
 http://localhost:3000/users/cc9e750e-0426-41ac-a898-c68a532d58a2
 ```
@@ -95,6 +97,8 @@ http://localhost:3000/users/cc9e750e-0426-41ac-a898-c68a532d58a2
 ```
 
 ### 4) GET logout
+
+- URL
 
 ```curl
 http://localhost:3000/logout
