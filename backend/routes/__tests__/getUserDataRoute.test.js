@@ -71,7 +71,7 @@ describe(`GET ${baseUrl}/users/:id`, () => {
     const cookieParameters = header["set-cookie"][0].split(";").slice(1);
     const mockAccessCookie = [[mockAccessToken, ...cookieParameters].join(";")];
 
-    const status = 401;
+    const status = 403;
     const res = await request(baseUrl)
       .get(`/users/${user.id}`)
       .set("Cookie", [...mockAccessCookie])
@@ -81,7 +81,7 @@ describe(`GET ${baseUrl}/users/:id`, () => {
     const userData = res._body;
 
     expect(resStatus).toBe(status);
-    expect(userData.errors[0]).toBe("Acesso negado!");
+    expect(userData.errors[0]).toBe("Token inválido!");
   });
 
   it("Trying get data with invalid access and refresh cookies", async () => {
@@ -132,26 +132,17 @@ describe(`GET ${baseUrl}/users/:id`, () => {
       [mockAccessToken, ...accessCookieParameters].join(";"),
     ];
 
-    const status = 200;
+    const status = 403;
     const res = await request(baseUrl)
       .get(`/users/${user.id}`)
       .set("Cookie", [...mockAccessCookie, refreshCookie])
       .send();
 
-    const accessCookie =
-      res.header["set-cookie"][0].includes("authAccessCookie");
     const resStatus = res.status;
     const userData = res._body;
 
     expect(resStatus).toBe(status);
-    expect(accessCookie).toBeTruthy();
-    expect(userData).toHaveProperty(
-      "id",
-      "name",
-      "email",
-      "createdAt",
-      "updatedAt"
-    );
+    expect(userData.errors[0]).toBe("Token inválido!");
   });
 
   it("Trying get data with invalid access cookie and valid refresh cookie that are not in Db", async () => {
