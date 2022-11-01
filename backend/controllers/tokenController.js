@@ -1,11 +1,11 @@
-import User from "../models/User.js";
-import Token from "../models/Token.js";
 import jwt from "jsonwebtoken";
+import Token from "../models/Token.js";
 import { generateAccessToken } from "../auth/token.js";
 
-const checkRefreshCookie = async (req, res, next) => {
-  const { cookies, user } = req;
+const refreshToken = async (req, res) => {
+  const { cookies } = req;
   const refreshToken = cookies.authRefreshCookie;
+  const originalUrl = req.headers.referer;
 
   const refreshSecret = process.env.JWT_REFRESH_SECRET;
 
@@ -19,21 +19,12 @@ const checkRefreshCookie = async (req, res, next) => {
     return res.status(403).json({ errors: ["Token inválido!"] });
   }
 
-  if (user) {
-    return next();
-  }
-
   jwt.verify(refreshToken, refreshSecret, async (err, user) => {
-    if (err) {
-      return res.status(403).json({ errors: ["Token inválido!"] });
+    if (err instanceof jwt.TokenExpiredError) {
+      return res.redirect("/logout");
     }
-    try {
-      req.user = await User.findOne({
-        where: { id: user.id },
-        attributes: { exclude: ["password"] },
-        raw: true,
-      });
 
+    try {
       const newAccessToken = generateAccessToken({ id: user.id });
 
       res.cookie("authAccessCookie", newAccessToken, {
@@ -41,11 +32,12 @@ const checkRefreshCookie = async (req, res, next) => {
         httpOnly: true,
       });
 
-      return next();
+      return res.redirect(originalUrl);
     } catch (error) {
       return res.status(403).json({ errors: ["Token inválido!"] });
     }
   });
 };
 
-export default checkRefreshCookie;
+const tokenController = { refreshToken };
+export default tokenController;

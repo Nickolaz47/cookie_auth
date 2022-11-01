@@ -12,9 +12,10 @@ const checkCookie = async (req, res, next) => {
   }
 
   jwt.verify(accessToken, accessSecret, async (err, user) => {
-    if (err) {
-      return next();
+    if (err instanceof jwt.TokenExpiredError) {
+      return res.redirect("/token/refresh");
     }
+
     try {
       req.user = await User.findOne({
         where: { id: user.id },

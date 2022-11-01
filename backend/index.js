@@ -1,4 +1,4 @@
-import express, { application } from "express";
+import express from "express";
 import sequelize from "./db/conn.js";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
@@ -9,6 +9,7 @@ import Token from "./models/Token.js";
 // Routes
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import tokenRoutes from "./routes/tokenRoutes.js";
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/users", userRoutes);
+app.use("/token", tokenRoutes);
 app.use("/", authRoutes);
 
 sequelize
