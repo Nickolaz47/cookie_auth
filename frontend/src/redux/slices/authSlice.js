@@ -16,7 +16,7 @@ export const register = createAsyncThunk(
       return thunkAPI.rejectWithValue(data.errors[0]);
     }
     // Almost 1 minute
-    Cookies.set("frontAuthCookie", data.id);
+    Cookies.set("frontAuthCookie", data.id, { expires: 7 });
     return data;
   }
 );
@@ -27,7 +27,7 @@ export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
     return thunkAPI.rejectWithValue(data.errors[0]);
   }
   // Almost 1 minute
-  Cookies.set("frontAuthCookie", data.id);
+  Cookies.set("frontAuthCookie", data.id, { expires: 7 });
   return data;
 });
 
