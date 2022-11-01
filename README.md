@@ -8,9 +8,9 @@ This repository was created to study authentication through cookies. Here the AP
 
 ## How it works
 
-When you send a request to login or register routes, the API will return two cookies. The first cookie is named authAccessCookie and stores the jwt access token of the user. This token expires after 15 seconds and it is necessary to get the user data. 
+When you send a request to login or register routes, the API will return two cookies. The first cookie is named authAccessCookie and stores the jwt access token of the user. This token expires after 15 minutes and it is necessary to get the user data. 
 
-The second cookie is named authRefreshCookie and stores the refresh token of the user. This token not expires and is necessary to generate a new access token. When the refresh token is generated, its value is stored in database to ensure that only refresh tokens registered in DB can create new access tokens.
+The second cookie is named authRefreshCookie and stores the refresh token of the user. This token expires in 7 days and is necessary to generate a new access token. When the refresh token is generated, its value is stored in database to ensure that only refresh tokens registered in DB can create new access tokens.
 
 Both cookies are http-only and cannot be access through JavaScript. To ensure that the frontend requests will pass these cookies to API is required to add some config in the fetch API/library. Here the parameter "withCredentials: true" is used in axios. Some similar config is set in API to send the cookies to the frontend. The cors library needs the parameter "credentials: true" to set the cookies in web browser.
 
