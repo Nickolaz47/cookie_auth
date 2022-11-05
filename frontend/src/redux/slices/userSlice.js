@@ -11,7 +11,7 @@ const initialState = {
 export const getUserData = createAsyncThunk(
   "user/info",
   async (none, thunkAPI) => {
-    const userId = thunkAPI.getState().auth.user.id;
+    const userId = thunkAPI.getState().auth.user;
     const data = await userService.getUserData(userId);
 
     if (data.errors) {

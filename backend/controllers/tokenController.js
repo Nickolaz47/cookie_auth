@@ -4,21 +4,20 @@ import { generateAccessToken } from "../auth/token.js";
 import { decryptData } from "../auth/encryptData.js";
 
 const refreshToken = async (req, res) => {
-  const { cookies } = req;
-  const refreshToken = cookies.authRefreshCookie;
+  const { authRefreshCookie } = req.cookies;
   const originalUrl = req.headers.referer;
 
   const refreshSecret = process.env.JWT_REFRESH_SECRET;
 
-  if (!refreshToken) {
+  if (!authRefreshCookie) {
     return res.status(401).json({ errors: ["Acesso negado!"] });
   }
-
+ 
   // Find all tokens
   const tokens = await Token.findAll({ raw: true });
   // Getting the token with the same value
   const tokenInDb = tokens.find((token) => {
-    const found = decryptData(refreshToken, token.value);
+    const found = decryptData(authRefreshCookie, token.value);
     if (found) {
       return token;
     }
@@ -28,7 +27,7 @@ const refreshToken = async (req, res) => {
     return res.status(403).json({ errors: ["Token inválido!"] });
   }
 
-  jwt.verify(refreshToken, refreshSecret, async (err, user) => {
+  jwt.verify(authRefreshCookie, refreshSecret, async (err, user) => {
     if (err instanceof jwt.TokenExpiredError) {
       return res.redirect("/logout");
     }
