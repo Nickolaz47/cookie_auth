@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import Token from "../models/Token.js";
 import { generateAccessToken } from "../auth/token.js";
+import { decryptData } from "../auth/encryptData.js";
 
 const refreshToken = async (req, res) => {
   const { cookies } = req;
@@ -13,7 +14,15 @@ const refreshToken = async (req, res) => {
     return res.status(401).json({ errors: ["Acesso negado!"] });
   }
 
-  const tokenInDb = await Token.findOne({ where: { value: refreshToken } });
+  // Find all tokens
+  const tokens = await Token.findAll({ raw: true });
+  // Getting the token with the same value
+  const tokenInDb = tokens.find((token) => {
+    const found = decryptData(refreshToken, token.value);
+    if (found) {
+      return token;
+    }
+  });
 
   if (!tokenInDb) {
     return res.status(403).json({ errors: ["Token inválido!"] });

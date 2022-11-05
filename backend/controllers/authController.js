@@ -86,11 +86,16 @@ const logout = async (req, res) => {
   // Find all tokens
   const tokens = await Token.findAll({ raw: true });
   // Getting the token with the same value
-  const { value: tokenValue } = tokens.find(
-    (token) => decryptData(authRefreshCookie, token.value) === true
-  );
+  const token = tokens.find((token) => {
+    const found = decryptData(authRefreshCookie, token.value);
+    if (found) {
+      return token;
+    }
+  });
   // Removing the token from db
-  await Token.destroy({ where: { value: tokenValue } });
+  if (token) {
+    await Token.destroy({ where: { value: token.value } });
+  }
 
   return res.json({ auth: false });
 };
