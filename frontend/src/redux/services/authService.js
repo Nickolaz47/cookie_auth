@@ -16,7 +16,6 @@ const login = async (data) => {
   const config = requestConfig(`${baseUrl}/login`, "POST", data);
   try {
     const res = await axios(config);
-
     return res.data;
   } catch (error) {
     return error.response.data;

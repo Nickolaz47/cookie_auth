@@ -1,7 +1,7 @@
 export const baseUrl = process.env.REACT_APP_API_URL;
 
 export const requestConfig = (baseURL, method, data, credentials = true) => {
-  if (method === "delete" || data === null) {
+  if (method === "delete" && data === null) {
     const config = {
       baseURL,
       method,
