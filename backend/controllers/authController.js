@@ -21,7 +21,8 @@ const login = async (req, res) => {
   const accessToken = generateAccessToken({ id: user.id });
   const refreshToken = generateRefreshToken({ id: user.id });
 
-  await Token.create({ value: refreshToken, UserId: user.id });
+  const hashedRefreshToken = encryptData(refreshToken);
+  await Token.create({ value: hashedRefreshToken, UserId: user.id });
 
   res
     .cookie("authAccessCookie", accessToken, {
@@ -56,7 +57,8 @@ const register = async (req, res) => {
       const accessToken = generateAccessToken({ id: newUser.id });
       const refreshToken = generateRefreshToken({ id: newUser.id });
 
-      Token.create({ value: refreshToken, UserId: newUser.id });
+      const hashedRefreshToken = encryptData(refreshToken);
+      Token.create({ value: hashedRefreshToken, UserId: newUser.id });
 
       res
         .cookie("authAccessCookie", accessToken, {
@@ -81,7 +83,14 @@ const logout = async (req, res) => {
   res.clearCookie("authAccessCookie");
   res.clearCookie("authRefreshCookie");
 
-  await Token.destroy({ where: { value: authRefreshCookie } });
+  // Find all tokens
+  const tokens = await Token.findAll({ raw: true });
+  // Getting the token with the same value
+  const { value: tokenValue } = tokens.find(
+    (token) => decryptData(authRefreshCookie, token.value) === true
+  );
+  // Removing the token from db
+  await Token.destroy({ where: { value: tokenValue } });
 
   return res.json({ auth: false });
 };
