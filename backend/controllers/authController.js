@@ -1,6 +1,6 @@
 import User from "../models/User.js";
 import Token from "../models/Token.js";
-import bcrypt from "bcryptjs";
+import { encryptData, decryptData } from "../auth/encryptData.js";
 import { generateAccessToken, generateRefreshToken } from "../auth/token.js";
 
 const login = async (req, res) => {
@@ -12,7 +12,7 @@ const login = async (req, res) => {
     return res.status(401).json({ errors: ["Credenciais inválidas!"] });
   }
 
-  const compairPasswords = bcrypt.compareSync(password, user.password);
+  const compairPasswords = decryptData(password, user.password);
 
   if (!compairPasswords) {
     return res.status(401).json({ errors: ["Credenciais inválidas!"] });
@@ -47,8 +47,7 @@ const register = async (req, res) => {
     return res.status(409).json({ errors: ["O e-mail já está em uso."] });
   }
 
-  const salt = bcrypt.genSaltSync(10);
-  const hashedPassword = bcrypt.hashSync(password, salt);
+  const hashedPassword = encryptData(password);
 
   const user = { name, email, password: hashedPassword };
 
