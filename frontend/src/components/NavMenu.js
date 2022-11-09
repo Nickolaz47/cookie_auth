@@ -2,9 +2,10 @@
 import { NavLink } from "react-router-dom";
 // Hooks
 import { useAuth } from "../hooks/useAuth";
-import { useDispatch } from "react-redux";
 // Redux
-import { logout } from "../redux/slices/authSlice";
+import { useLogoutMutation } from "../redux/RTK/authApiSlice";
+import { useDispatch } from "react-redux";
+import { logout as logoutFromFront } from "../redux/RTK/newAuthSlice";
 
 const NavMenu = () => {
   const navLinksNoAuth = [
@@ -15,7 +16,13 @@ const NavMenu = () => {
   const navLinksAuth = [{ name: "Dashboard", url: "/dashboard" }];
 
   const { auth } = useAuth();
+  const [logout] = useLogoutMutation();
   const dispatch = useDispatch();
+
+  const handleLogout = async () => {
+    dispatch(logoutFromFront());
+    await logout();
+  };
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
@@ -59,7 +66,7 @@ const NavMenu = () => {
           {auth && (
             <button
               className="btn btn-outline-danger btn-sm mx-1"
-              onClick={() => dispatch(logout())}
+              onClick={handleLogout}
             >
               <span className="d-flex justify-content-center align-items-center">
                 Logout
