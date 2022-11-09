@@ -1,28 +1,28 @@
 // Hooks
-import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 // Components
 import { Link } from "react-router-dom";
 // Redux
-import { login, reset } from "../../redux/slices/authSlice";
+// import { login, reset } from "../../redux/slices/authSlice";
+import { setCredentials } from "../../redux/RTK/newAuthSlice";
+import { useLoginMutation } from "../../redux/RTK/authApiSlice";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { loading, error } = useSelector((state) => state.auth);
+  // const { loading, error } = useSelector((state) => state.auth);
+  const [login, { isLoading, error }] = useLoginMutation();
   const dispatch = useDispatch();
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
     const user = { email, password };
-    dispatch(login(user));
+    const { data: userId } = await login(user);
+    if (userId) {
+      dispatch(setCredentials(userId));
+    }
   };
-
-  useEffect(() => {
-    dispatch(reset());
-  }, [dispatch]);
 
   return (
     <div className="container py-5 h-100">
@@ -71,7 +71,7 @@ const Login = () => {
                       Senha
                     </label>
                   </div>
-                  {!loading && (
+                  {!isLoading && (
                     <button
                       className="btn btn-primary btn-lg px-5"
                       type="submit"
@@ -79,7 +79,7 @@ const Login = () => {
                       Login
                     </button>
                   )}
-                  {loading && <p>Carregando...</p>}
+                  {isLoading && <p>Carregando...</p>}
                 </form>
               </div>
               {error && <p className="text-bg-danger p-3">{error}</p>}

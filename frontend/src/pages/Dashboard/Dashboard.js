@@ -8,23 +8,23 @@ const Dashboard = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
-  const { user, loading, error } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
+  // const { user, loading, error } = useSelector((state) => state.user);
+  // const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(getUserData());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(getUserData());
+  // }, [dispatch]);
 
-  useEffect(() => {
-    if (user) {
-      setName(user.name);
-      setEmail(user.email);
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user) {
+  //     setName(user.name);
+  //     setEmail(user.email);
+  //   }
+  // }, [user]);
 
   return (
     <div className="container py-3 h-100">
-      <div className="row d-flex justify-content-center align-items-center h-100">
+      {/* <div className="row d-flex justify-content-center align-items-center h-100">
         <div className="col-8 col-md-8 col-lg-8 col-xl-8">
           <div
             className="card bg-white text-black"
@@ -67,7 +67,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
