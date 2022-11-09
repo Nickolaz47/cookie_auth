@@ -1,30 +1,32 @@
 // Hooks
 import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 // Redux
-import { getUserData } from "../../redux/slices/userSlice";
+import { useGetUserDataMutation } from "../../redux/RTK/userSlice";
+import { selectCurrentUser } from "../../redux/RTK/newAuthSlice";
 
 const Dashboard = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
-  // const { user, loading, error } = useSelector((state) => state.user);
-  // const dispatch = useDispatch();
+  const userId = useSelector(selectCurrentUser);
+  const [getUserData, { isLoading, error, data: user }] =
+    useGetUserDataMutation();
 
-  // useEffect(() => {
-  //   dispatch(getUserData());
-  // }, [dispatch]);
+  useEffect(() => {
+    getUserData(userId);
+  }, [getUserData, userId]);
 
-  // useEffect(() => {
-  //   if (user) {
-  //     setName(user.name);
-  //     setEmail(user.email);
-  //   }
-  // }, [user]);
+  useEffect(() => {
+    if (user) {
+      setName(user.name);
+      setEmail(user.email);
+    }
+  }, [user]);
 
   return (
     <div className="container py-3 h-100">
-      {/* <div className="row d-flex justify-content-center align-items-center h-100">
+      <div className="row d-flex justify-content-center align-items-center h-100">
         <div className="col-8 col-md-8 col-lg-8 col-xl-8">
           <div
             className="card bg-white text-black"
@@ -60,14 +62,14 @@ const Dashboard = () => {
                       E-mail
                     </label>
                   </div>
-                  {loading && <p>Carregando...</p>}
+                  {isLoading && <p>Carregando...</p>}
                 </form>
               </div>
               {error && <p className="text-bg-danger p-3">{error}</p>}
             </div>
           </div>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };

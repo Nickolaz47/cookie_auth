@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { apiSlice } from "./RTK/apiSlice";
+import { userSlice } from "./RTK/userSlice";
 import authReducer from "./RTK/newAuthSlice";
 
 export const store = configureStore({
@@ -8,5 +9,7 @@ export const store = configureStore({
     auth: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiSlice.middleware),
+    getDefaultMiddleware()
+      .concat(apiSlice.middleware)
+      .concat(userSlice.middleware),
 });
