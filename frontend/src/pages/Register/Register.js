@@ -1,10 +1,11 @@
 // Hooks
-import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 // Components
 import { Link } from "react-router-dom";
 // Redux
-import { register, reset } from "../../redux/slices/authSlice";
+import { setCredentials } from "../../redux/RTK/newAuthSlice";
+import { useRegisterMutation } from "../../redux/RTK/authApiSlice";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -12,19 +13,18 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const { loading, error } = useSelector((state) => state.auth);
+  const [register, { isLoading, error }] = useRegisterMutation();
   const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newUser = { name, email, password, confirmPassword };
-    dispatch(register(newUser));
+    const { data: userId } = await register(newUser);
+    if (userId) {
+      dispatch(setCredentials(userId));
+    }
   };
-
-  useEffect(() => {
-    dispatch(reset());
-  }, [dispatch]);
 
   return (
     <div className="container py-3 h-100">
@@ -115,7 +115,7 @@ const Register = () => {
                       </div>
                     </div>
                   </div>
-                  {!loading && (
+                  {!isLoading && (
                     <button
                       className="btn btn-primary btn-lg px-5"
                       type="submit"
@@ -123,7 +123,7 @@ const Register = () => {
                       Cadastrar
                     </button>
                   )}
-                  {loading && <p>Carregando...</p>}
+                  {isLoading && <p>Carregando...</p>}
                 </form>
               </div>
               {error && <p className="text-bg-danger p-3">{error}</p>}
