@@ -4,8 +4,8 @@ import { useDispatch } from "react-redux";
 // Components
 import { Link } from "react-router-dom";
 // Redux
-import { setCredentials } from "../../redux/RTK/newAuthSlice";
-import { useRegisterMutation } from "../../redux/RTK/authApiSlice";
+import { setCredentials } from "../../redux/auth/authSlice";
+import { useRegisterMutation } from "../../redux/services/authService";
 
 const Register = () => {
   const [name, setName] = useState("");

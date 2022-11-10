@@ -1,5 +1,6 @@
-import { apiSlice } from "./apiSlice";
+import { apiSlice } from "../api/apiSlice";
 
+// Inserting new endpoints in apiSlice
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     register: builder.mutation({

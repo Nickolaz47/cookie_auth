@@ -3,9 +3,9 @@ import { NavLink } from "react-router-dom";
 // Hooks
 import { useAuth } from "../hooks/useAuth";
 // Redux
-import { useLogoutMutation } from "../redux/RTK/authApiSlice";
+import { useLogoutMutation } from "../redux/services/authService";
 import { useDispatch } from "react-redux";
-import { logout as logoutFromFront } from "../redux/RTK/newAuthSlice";
+import { logout as logoutFromFront } from "../redux/auth/authSlice";
 
 const NavMenu = () => {
   const navLinksNoAuth = [

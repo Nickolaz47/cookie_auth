@@ -2,8 +2,8 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 // Redux
-import { useGetUserDataMutation } from "../../redux/RTK/userSlice";
-import { selectCurrentUser } from "../../redux/RTK/newAuthSlice";
+import { useGetUserDataMutation } from "../../redux/services/userService";
+import { selectCurrentUser } from "../../redux/auth/authSlice";
 
 const Dashboard = () => {
   const [name, setName] = useState("");

@@ -5,8 +5,8 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 // Redux
 // import { login, reset } from "../../redux/slices/authSlice";
-import { setCredentials } from "../../redux/RTK/newAuthSlice";
-import { useLoginMutation } from "../../redux/RTK/authApiSlice";
+import { setCredentials } from "../../redux/auth/authSlice";
+import { useLoginMutation } from "../../redux/services/authService";
 
 const Login = () => {
   const [email, setEmail] = useState("");
