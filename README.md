@@ -12,7 +12,7 @@ When you send a request to login or register routes, the API will return two coo
 
 The second cookie is named authRefreshCookie and stores the refresh token of the user. This token expires in 7 days and is necessary to generate a new access token. When the refresh token is generated, its value is stored in database to ensure that only refresh tokens registered in DB can create new access tokens.
 
-Both cookies are http-only and cannot be access through JavaScript. To ensure that the frontend requests will pass these cookies to API is required to add some config in the fetch API/library. Here the parameter "withCredentials: true" is used in axios. Some similar config is set in API to send the cookies to the frontend. The cors library needs the parameter "credentials: true" to set the cookies in web browser.
+Both cookies are http-only and cannot be access through JavaScript. To ensure that the frontend requests will pass these cookies to API is required to add some config in the fetch API/library. Here the parameter "credentials: include" is used in redux fetchAPI. Some similar config is set in API to send the cookies to the frontend. The cors library needs the parameter "credentials: true" to set the cookies in web browser.
 
 The cookies are removed from the web browser through the logout route. Besides that, the refresh token is deleted from database.
 
@@ -117,7 +117,27 @@ http://localhost:3000/logout
   "auth": false
 }
 ```
+### 5) GET refresh token
 
+- URL
+
+```curl
+http://localhost:3000/token/refresh
+```
+
+- Request
+
+```json
+{}
+```
+
+- Response
+
+```json
+{
+    "msg": "Access token renovado!"
+}
+```
 ## Setup
 
 ```bash
