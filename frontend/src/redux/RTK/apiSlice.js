@@ -14,12 +14,16 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
     // send refresh token to get new access token
     const refreshResult = await baseQuery("/token/refresh", api, extraOptions);
     if (refreshResult?.data) {
+      console.log(refreshResult);
       const user = api.getState().auth.user;
+      console.log(user);
       // store the new token
-      api.dispatch(setCredentials({ user }));
+      api.dispatch(setCredentials(user));
       // retry the original query with new access token
       result = await baseQuery(args, api, extraOptions);
-    } else if (error === "Refresh token expirado!") {
+      return result;
+    } else {
+      await baseQuery("/logout", api, extraOptions);
       api.dispatch(logout());
     }
   }
